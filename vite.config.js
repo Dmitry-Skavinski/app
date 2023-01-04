@@ -6,14 +6,14 @@ export default defineConfig({
     plugins: [
         vue(),
         laravel({
-            input: ['resources/css/base.scss', 'resources/js/app.js'],
+            input: ['resources/js/app.js'],
             refresh: true,
         }),
     ],
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@import "resources/css/variables.scss";`
+                additionalData: `@import "resources/styles/base.scss";`
             }
         }
     }
