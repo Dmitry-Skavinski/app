@@ -16,7 +16,7 @@ const { isOpen, close } = defineProps([ 'isOpen', 'close' ]);
     &_background {
         height: 100vh;
         width: 100vw;
-        background: rgba($color: $background, $alpha: 0.3);
+        background: rgba($color: $background-secondary, $alpha: 0.3);
         position: fixed;
         top: 0;
         left: 0;
