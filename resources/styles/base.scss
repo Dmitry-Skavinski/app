@@ -43,6 +43,7 @@ button, .button {
     &:hover {
         transition: 0.1s border-radius linear;
         border-radius: 10px;
+        cursor: pointer;
     }
 }
 
