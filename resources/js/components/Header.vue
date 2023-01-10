@@ -1,12 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import user from '../stores/user';
+import Login from './Login.vue';
 import Popup from './Popup.vue';
 
-const isPopupOpen = ref(false);
+const isLoginPopupOpen = ref(false);
 
-const togglePopup = () => {
-    isPopupOpen.value = !isPopupOpen.value
+const toggleLoginPopup = () => {
+    isLoginPopupOpen.value = !isLoginPopupOpen.value
 }
 
 </script>
@@ -19,9 +20,10 @@ const togglePopup = () => {
         </nav>
         <div class="actions">
             <template v-if="!Object.keys(user).length">
-                <button @click="togglePopup">login</button>
-                <button>register</button>  
-                <Popup :isOpen="isPopupOpen" :close="togglePopup">
+                <button @click="toggleLoginPopup">login</button>
+                <button @click="toggleLoginPopup">register</button>  
+                <Popup :isOpen="isLoginPopupOpen" :close="toggleLoginPopup">
+                    <Login/>
                 </Popup>
             </template>
             <RouterLink v-else to="/me">profile</RouterLink>
