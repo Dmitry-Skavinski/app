@@ -2,14 +2,16 @@
 import { reactive } from 'vue';
 import axios from 'axios';
 import user from '../stores/user';
+
 const fields = reactive({
-    login: '',
+    email: '',
+    name: '',
     password: ''
 });
 
-const login = async () => {
+const register = async () => {
     await axios.get('/sanctum/csrf-cookie');
-    const { data } = await axios.post('/api/login', fields);
+    const { data } = await axios.post('/api/register', fields);
     user.name = data.name;
     user.email = data.email;
 }
@@ -17,8 +19,9 @@ const login = async () => {
 
 <template>
     <form class="popup_login">
-        <input v-model="fields.login" placeholder="username or email"/>
+        <input v-model="fields.email" type="email" placeholder="example@gmail.com"/>
+        <input v-model="fields.name" placeholder="username"/>
         <input v-model="fields.password" type="password" placeholder="password"/>
-        <button @click="login" class="button-secondary">login</button>
+        <button @click.prevent="register" class="button-secondary">register</button>
     </form>
 </template>

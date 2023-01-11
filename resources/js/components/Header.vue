@@ -3,11 +3,18 @@ import { ref } from 'vue';
 import user from '../stores/user';
 import Login from './Login.vue';
 import Popup from './Popup.vue';
+import Register from './Register.vue';
 
 const isLoginPopupOpen = ref(false);
 
 const toggleLoginPopup = () => {
     isLoginPopupOpen.value = !isLoginPopupOpen.value
+}
+
+const isRegisterPopupOpen = ref(false);
+
+const toggleRegisterPopup = () => {
+    isRegisterPopupOpen.value = !isRegisterPopupOpen.value
 }
 
 </script>
@@ -21,9 +28,12 @@ const toggleLoginPopup = () => {
         <div class="actions">
             <template v-if="!Object.keys(user).length">
                 <button @click="toggleLoginPopup">login</button>
-                <button @click="toggleLoginPopup">register</button>  
+                <button @click="toggleRegisterPopup">register</button>  
                 <Popup :isOpen="isLoginPopupOpen" :close="toggleLoginPopup">
                     <Login/>
+                </Popup>
+                <Popup :isOpen="isRegisterPopupOpen" :close="toggleRegisterPopup">
+                    <Register/>
                 </Popup>
             </template>
             <RouterLink v-else to="/me">profile</RouterLink>
@@ -55,5 +65,13 @@ const toggleLoginPopup = () => {
             color: $secondary;
             text-transform: uppercase;
         }
+    }
+
+    .popup_login {
+        min-height: 40vh;
+        display: grid;
+        background-color: $background-secondary;
+        min-width: 40vw;
+        justify-content: space-evenly;
     }
 </style>
