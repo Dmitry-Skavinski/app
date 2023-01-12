@@ -32,14 +32,16 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'login' => 'required|min:6',
+            'login' => 'required|min:4',
             'password' => ['required', Password::min(8)->letters()->numbers()]
         ]);
         $user = User::where('email', $request->login)->orWhere('name', $request->login)->first();
-        if (Hash::check($request->password, $user->password)) {
+        if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user);
 
             return $user->toJson;
         }
+
+        return response('user not found', 404);
     }
 }
