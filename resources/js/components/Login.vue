@@ -19,6 +19,6 @@ const login = async () => {
     <form class="popup_login">
         <input v-model="fields.login" placeholder="username or email"/>
         <input v-model="fields.password" type="password" placeholder="password"/>
-        <button @click="login" class="button-secondary">login</button>
+        <button @click.prevent="login" class="button-secondary">login</button>
     </form>
 </template>

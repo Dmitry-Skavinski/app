@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         $request->validate([
             'login' => 'required|min:6',
-            'password' => 'required|regex:/[a-z]/i|regex:/0-9/|min:8'
+            'password' => ['required', Password::min(8)->letters()->numbers()]
         ]);
         $user = User::where('email', $request->login)->orWhere('name', $request->login)->first();
         if (Hash::check($request->password, $user->password)) {
