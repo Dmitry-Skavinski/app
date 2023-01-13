@@ -1,14 +1,7 @@
 <script setup>
-import { ref } from 'vue';
 import user from '../stores/user';
-import Popup from './Popup.vue';
-
-const isPopupOpen = ref(false);
-
-const togglePopup = () => {
-    isPopupOpen.value = !isPopupOpen.value
-}
-
+import Login from './Login.vue';
+import Register from './Register.vue';
 </script>
 
 <template>
@@ -19,10 +12,8 @@ const togglePopup = () => {
         </nav>
         <div class="actions">
             <template v-if="!Object.keys(user).length">
-                <button @click="togglePopup">login</button>
-                <button>register</button>  
-                <Popup :isOpen="isPopupOpen" :close="togglePopup">
-                </Popup>
+                <Login/>
+                <Register/>
             </template>
             <RouterLink v-else to="/me">profile</RouterLink>
         </div>
@@ -52,6 +43,54 @@ const togglePopup = () => {
         a {
             color: $secondary;
             text-transform: uppercase;
+        }
+    }
+
+    .popup_login {
+        min-height: 40vh;
+        display: flex;
+        flex-direction: column;
+        background-color: $background-secondary;
+        min-width: 40vw;
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+        justify-content: center;
+
+        &_errors {
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 116px;
+            width: 200px;
+            overflow: hidden;
+
+            p {
+                margin-block: 0;
+                text-transform: lowercase;
+            }
+        }
+
+        .errors {
+            &-enter {
+                &-active {
+                    transition: all 0.3s ease;
+                }
+                
+                &-from {
+                    height: 0px;
+                }
+
+                &-to {
+                    height: 116px;
+                }
+            }
+        }
+
+        button {
+            color: $background-secondary;
+            width: 200px;
         }
     }
 </style>
