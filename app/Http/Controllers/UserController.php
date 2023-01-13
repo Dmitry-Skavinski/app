@@ -39,7 +39,7 @@ class UserController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user);
 
-            return $user->toJson;
+            return $user->toJson();
         }
 
         return response('user not found', 404);
