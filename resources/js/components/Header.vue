@@ -1,22 +1,7 @@
 <script setup>
-import { ref } from 'vue';
 import user from '../stores/user';
 import Login from './Login.vue';
-import Popup from './Popup.vue';
 import Register from './Register.vue';
-
-const isLoginPopupOpen = ref(false);
-
-const toggleLoginPopup = () => {
-    isLoginPopupOpen.value = !isLoginPopupOpen.value
-}
-
-const isRegisterPopupOpen = ref(false);
-
-const toggleRegisterPopup = () => {
-    isRegisterPopupOpen.value = !isRegisterPopupOpen.value
-}
-
 </script>
 
 <template>
@@ -27,14 +12,8 @@ const toggleRegisterPopup = () => {
         </nav>
         <div class="actions">
             <template v-if="!Object.keys(user).length">
-                <button @click="toggleLoginPopup">login</button>
-                <button @click="toggleRegisterPopup">register</button>  
-                <Popup :isOpen="isLoginPopupOpen" :close="toggleLoginPopup">
-                    <Login/>
-                </Popup>
-                <Popup :isOpen="isRegisterPopupOpen" :close="toggleRegisterPopup">
-                    <Register/>
-                </Popup>
+                <Login/>
+                <Register/>
             </template>
             <RouterLink v-else to="/me">profile</RouterLink>
         </div>
@@ -69,9 +48,49 @@ const toggleRegisterPopup = () => {
 
     .popup_login {
         min-height: 40vh;
-        display: grid;
+        display: flex;
+        flex-direction: column;
         background-color: $background-secondary;
         min-width: 40vw;
-        justify-content: space-evenly;
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+        justify-content: center;
+
+        &_errors {
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 116px;
+            width: 200px;
+            overflow: hidden;
+
+            p {
+                margin-block: 0;
+                text-transform: lowercase;
+            }
+        }
+
+        .errors {
+            &-enter {
+                &-active {
+                    transition: all 0.3s ease;
+                }
+                
+                &-from {
+                    height: 0px;
+                }
+
+                &-to {
+                    height: 116px;
+                }
+            }
+        }
+
+        button {
+            color: $background-secondary;
+            width: 200px;
+        }
     }
 </style>
