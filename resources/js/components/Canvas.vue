@@ -1,11 +1,10 @@
 <script setup>
-import { reactive, ref } from 'vue';
-const { mode, height, width } = defineProps(['mode', 'height', 'width']);
+import { reactive } from 'vue';
+const { mode, height, width, scale } = defineProps(['mode', 'height', 'width', 'scale']);
 
 const initialState = Array(height).fill(0).map(el => Array(width).fill(0));
 
 const state = reactive(initialState);
-const scale = ref(1);
 const path = reactive({
     toState: 1,
     initialX: 0,
@@ -13,12 +12,19 @@ const path = reactive({
     isActive: false
 });
 
-const startDrawing = (cell, x, y) => {
-    console.log(cell, x, y);
+const startDrawing = (cell, x, y, button) => {
     path.initialX = x;
     path.initialY = y;
-    path.toState = cell ? 0 : 1;
     path.isActive = true;
+
+    if (button === 0) {
+        path.toState = cell === 1 ? 0 : 1; 
+    }
+
+    if (button === 2) {
+        path.toState = cell === 2 ? 0 : 2;
+    }
+
     draw(x, y);
 }
 
@@ -29,15 +35,14 @@ const stopDrawing = () => {
 const draw = (x, y) => {
     if (!path.isActive) return;
     switch (mode) {
-        case 'draw' : state[y][x] = path.toState;
+        case 'default' : state[y][x] = path.toState;
         break;
+        case 'lines' : 
     }
     
 }
 
-const resize = (event) => {
-    scale.value = event.target.value
-}
+
 
 const generateBorders = (row, column) => {
     const styles = {};
@@ -72,23 +77,17 @@ const generateCellClass = (cellValue) => {
 </script>
 
 <template>
-    <div class="canvas_wrapper">
-        <div class="canvas" :style="`transform: scale(${scale})`" @mouseup="stopDrawing" @mouseleave="stopDrawing">
-            <div v-for="(row, rowKey) in state" class="row">
-                <div
-                v-for="(cell, columnKey) in row"
-                class="cell"
-                :class="generateCellClass(cell)"
-                :style="generateBorders(rowKey, columnKey)"
-                @mousedown="event => startDrawing(cell, columnKey, rowKey)"
-                @mouseover="event => draw(columnKey, rowKey)"
-                />
-            </div>
+    <div class="canvas" :style="`transform: scale(${scale})`" @mouseup="stopDrawing" @mouseleave="stopDrawing" @contextmenu.prevent="">
+        <div v-for="(row, rowKey) in state" class="row">
+            <div
+            v-for="(cell, columnKey) in row"
+            class="cell"
+            :class="generateCellClass(cell)"
+            :style="generateBorders(rowKey, columnKey)"
+            @mousedown="event => startDrawing(cell, columnKey, rowKey, event.button)"
+            @mouseover="event => draw(columnKey, rowKey)"
+            />
         </div>
-    </div>
-    <div class="canvas_controls">
-        Scale: 
-        <input type="range" min="0.5" max="10" @input="resize" :value="scale" step="0.1"/>
     </div>
 </template>
 
@@ -102,13 +101,6 @@ const generateCellClass = (cellValue) => {
     border: 1px solid $primary;
     user-select: none;
 
-    &_wrapper {
-        width: 100%;
-        overflow: scroll;
-        display: flex;
-        grid-area: canvas;
-    }
-
     .row {
         display: flex;
 
@@ -119,19 +111,23 @@ const generateCellClass = (cellValue) => {
             background-color: $background-secondary;
             border-right: 1px solid grey;
             border-bottom: 1px solid grey;
+            position: relative;
+            box-sizing: content-box;
 
             &__colored {
                 background-color: black;
             }
-        }
-    }
 
-    &_controls {
-        width: min-content;
-        grid-area: controls;
-
-        input {
-            width: 100px;
+            &__excluded {
+                &::after {
+                    display: inline-block;
+                    text-align: center;
+                    vertical-align: middle;
+                    content: 'X';
+                    width: 16px;
+                    height: 16px;
+                }
+            }
         }
     }
 }
