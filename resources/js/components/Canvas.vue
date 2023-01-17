@@ -1,8 +1,7 @@
 <script setup>
 import { reactive } from 'vue';
-const { mode, height, width, scale } = defineProps(['mode', 'height', 'width', 'scale']);
+const { mode, height, width, scale, state } = defineProps(['mode', 'height', 'width', 'scale', 'state']);
 
-const initialState = Array(height).fill(0).map(el => Array(width).fill(0));
 const initialPath = {
     toState: 1,
     initialX: undefined,
@@ -12,7 +11,6 @@ const initialPath = {
     isActive: false
 };
 
-const state = reactive(initialState);
 const path = reactive(initialPath);
 
 const startDrawing = (cell, x, y, button) => {
