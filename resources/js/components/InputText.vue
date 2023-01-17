@@ -4,7 +4,7 @@ const { modelValue, type, placeholder, name} = defineProps(['modelValue', 'type'
 
 <template>
     <div class="input-text">
-        <input v-model="modelValue" @input="$emit('update:modelValue', $event.target.value)" :type="type" :placeholder="placeholder"/>
+        <input v-model="modelValue" @input="$emit('update:modelValue', $event.target.value)" :type="type" :placeholder="placeholder || name"/>
         <span v-if="name">{{ name }}</span>
     </div>
 </template>

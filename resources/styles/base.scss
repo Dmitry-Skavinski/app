@@ -77,3 +77,15 @@ button, .button {
 input {
     height: max-content;
 }
+
+form {
+    min-height: 40vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $background-secondary;
+    min-width: 40vw;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+    justify-content: center;
+}
