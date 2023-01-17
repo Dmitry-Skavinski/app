@@ -1,30 +1,37 @@
 <script setup>
+import { isPlainObject } from '@vue/shared';
 import { reactive } from 'vue';
 const { mode, height, width, scale } = defineProps(['mode', 'height', 'width', 'scale']);
 
 const initialState = Array(height).fill(0).map(el => Array(width).fill(0));
+const initialPath = {
+    toState: 1,
+    initialX: undefined,
+    initialY: undefined,
+    isVertical: undefined,
+    initialState: undefined,
+    isActive: false
+};
 
 const state = reactive(initialState);
-const path = reactive({
-    toState: 1,
-    initialX: 0,
-    initialY: 0,
-    isActive: false
-});
+const path = reactive(initialPath);
 
 const startDrawing = (cell, x, y, button) => {
     path.initialX = x;
     path.initialY = y;
     path.isActive = true;
 
-    if (button === 0) {
-        path.toState = cell === 1 ? 0 : 1; 
-    }
+    path.initialState = Array(height).fill(0).map((el, key) => [...state[key]]);
 
-    if (button === 2) {
-        path.toState = cell === 2 ? 0 : 2;
+    switch (button) {
+        case 0: path.toState = cell === 1 ? 0 : 1;
+        break;
+        case 1: path.toState = cell === 3 ? 0 : 3;
+        break;
+        case 2: path.toState = cell === 2 ? 0 : 2;
+        break;
     }
-
+    
     draw(x, y);
 }
 
@@ -32,28 +39,61 @@ const stopDrawing = () => {
     path.isActive = false;
 }
 
-const draw = (x, y) => {
+const drawLine = (x1, y1, x2, y2, isVertical) => {
+    const { min, max } = Math;
+    if (isVertical) {
+        for ( let i = min(y1, y2); i <= max(y1, y2); i++ ) {
+            state[i][x1] = path.toState;
+        }
+    } else {
+        for ( let i = min(x1, x2); i <= max(x1, x2); i++ ) {
+            state[y1][i] = path.toState;
+        }
+    }
+}
+
+const draw = (x, y, activeMode = 'default') => {
     if (!path.isActive) return;
-    switch (mode) {
-        case 'default' : state[y][x] = path.toState;
-        break;
-        case 'lines' : 
+    switch (activeMode) {
+        case 'default':
+            state[y][x] = path.toState;
+            return;
+        case 'lines':
+            if (x != path.initialX || y != path.initialY) {
+                const xDistance = Math.abs(x - path.initialX);
+                const yDistance = Math.abs(y - path.initialY);
+                const isVertical = yDistance > xDistance;
+
+                if (yDistance == 1 || xDistance == 1) {
+                    path.isVertical = isVertical;
+                }
+
+                if (path.isVertical === isVertical) {
+                    drawLine(path.initialX, path.initialY, x, y, isVertical);
+                } else {
+                    for (let key in state) {
+                        state[key] = [... path.initialState[key]]
+                    }
+                }
+
+            } else {
+                state[y][x] = path.toState;
+            }
+            return;
     }
     
 }
 
-
-
 const generateBorders = (row, column) => {
     const styles = {};
     if (!((row + 1) % 5)) {
-        styles['border-bottom'] = '1px solid var(--accent-border)'
+        styles['border-bottom'] = '2px solid var(--accent-border)'
     }
     if (!(row % 5)) {
         styles['border-top'] = 'none'
     }
     if (!((column + 1) % 5)) {
-        styles['border-right'] = '1px solid var(--accent-border)'
+        styles['border-right'] = '2px solid var(--accent-border)'
     }
     if (!(column % 5)) {
         styles['border-left'] = 'none'
@@ -71,13 +111,21 @@ const generateCellClass = (cellValue) => {
     switch (cellValue) {
         case 0: return 'cell__empty';
         case 1: return 'cell__colored';
-        case 2: return 'cell__excluded'
+        default: return 'cell__withText';
+    }
+}
+
+const generateCellContent = (cellValue) => {
+    switch (cellValue) {
+        case 2: return 'x';
+        case 3: return '·';
+        default: return '';
     }
 }
 </script>
 
 <template>
-    <div class="canvas" :style="`transform: scale(${scale})`" @mouseup="stopDrawing" @mouseleave="stopDrawing" @contextmenu.prevent="">
+    <div class="canvas" @mouseup="stopDrawing" @mouseleave="stopDrawing" @contextmenu.prevent="" :style="{'--scale': scale}">
         <div v-for="(row, rowKey) in state" class="row">
             <div
             v-for="(cell, columnKey) in row"
@@ -85,8 +133,10 @@ const generateCellClass = (cellValue) => {
             :class="generateCellClass(cell)"
             :style="generateBorders(rowKey, columnKey)"
             @mousedown="event => startDrawing(cell, columnKey, rowKey, event.button)"
-            @mouseover="event => draw(columnKey, rowKey)"
-            />
+            @mouseover="() => draw(columnKey, rowKey, mode)"
+            >
+            {{ generateCellContent(cell) }}
+        </div>
         </div>
     </div>
 </template>
@@ -98,7 +148,7 @@ const generateCellClass = (cellValue) => {
     height: max-content;
     width: max-content;
     transform-origin: top left;
-    border: 1px solid $primary;
+    border: 2px solid $primary;
     user-select: none;
 
     .row {
@@ -106,27 +156,22 @@ const generateCellClass = (cellValue) => {
 
         .cell {
             --accent-border: #{$primary};
-            width: 16px;
-            height: 16px;
+            width: calc(16px * var(--scale));
+            height: calc(16px * var(--scale));
             background-color: $background-secondary;
-            border-right: 1px solid grey;
-            border-bottom: 1px solid grey;
-            position: relative;
+            border-right: 2px solid grey;
+            border-bottom: 2px solid grey;
             box-sizing: content-box;
+            display: flex;
 
             &__colored {
                 background-color: black;
             }
 
-            &__excluded {
-                &::after {
-                    display: inline-block;
-                    text-align: center;
-                    vertical-align: middle;
-                    content: 'X';
-                    width: 16px;
-                    height: 16px;
-                }
+            &__withText {
+                font-size: calc(14px * var(--scale));
+                justify-content: center;
+                font-weight: bolder;
             }
         }
     }

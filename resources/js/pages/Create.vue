@@ -3,6 +3,12 @@ import { ref } from 'vue';
 import Canvas from '../components/Canvas.vue';
 import user from '../stores/user';
 
+const mode = ref('default');
+
+const toggleMode = () => {
+    mode.value = mode.value === 'default' ? 'lines' : 'default';
+}
+
 const scale = ref(1);
 
 const resize = (event) => {
@@ -16,11 +22,13 @@ const resize = (event) => {
     </main>
     <main v-if="Object.keys(user).length" class="route-create">
         <div class="canvas_wrapper">
-            <Canvas mode="default" :height="15" :width="10" :scale="scale"/>  
+            <Canvas :height="15" :width="10" :scale="scale" :mode="mode"/>  
         </div>
         <div class="canvas_controls">
-            Scale: 
+            Scale: {{ scale }}
             <input type="range" min="0.5" max="10" @input="resize" :value="scale" step="0.1"/>
+            Mode: {{ mode }}
+            <button @click="toggleMode">toggle mode</button>
         </div>
     </main>
 </template>
