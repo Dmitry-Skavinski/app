@@ -1,5 +1,4 @@
 <script setup>
-import { isPlainObject } from '@vue/shared';
 import { reactive } from 'vue';
 const { mode, height, width, scale } = defineProps(['mode', 'height', 'width', 'scale']);
 
@@ -31,7 +30,7 @@ const startDrawing = (cell, x, y, button) => {
         case 2: path.toState = cell === 2 ? 0 : 2;
         break;
     }
-    
+
     draw(x, y);
 }
 
