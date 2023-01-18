@@ -65,10 +65,15 @@ const resize = (event) => {
             <Canvas :height="+nonogram.height" :width="+nonogram.width" :scale="scale" :mode="mode" :state="nonogram.state"/>  
         </div>
         <div class="canvas_controls" v-if="!popup">
-            Scale: {{ scale }}
-            <input type="range" min="0.5" max="10" @input="resize" :value="scale" step="0.1"/>
-            Mode: {{ mode }}
-            <button @click="toggleMode">toggle mode</button>
+            <div>
+                Scale: {{ scale }}
+                <input type="range" min="0.5" max="10" @input="resize" :value="scale" step="0.1"/>
+            </div>
+            <div>
+                Mode: {{ mode }}
+                <button @click="toggleMode">toggle mode</button>
+            </div>
+            <button>save</button>
         </div>
     </main>
     <Popup :isOpen="popup">
@@ -102,8 +107,25 @@ const resize = (event) => {
         }
 
         &_controls {
-            width: min-content;
+            width: 100%;
             grid-area: controls;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            height: 60px;
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                flex: 1;
+            }
+
+            > button {
+                width: 200px;
+                flex: 1;
+            }
 
             input[type="range"] {
                 width: 100px;
