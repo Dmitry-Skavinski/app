@@ -47,16 +47,6 @@ import Register from './Register.vue';
     }
 
     .popup_login {
-        min-height: 40vh;
-        display: flex;
-        flex-direction: column;
-        background-color: $background-secondary;
-        min-width: 40vw;
-        align-items: center;
-        padding: 20px;
-        gap: 20px;
-        justify-content: center;
-
         &_errors {
             font-size: 14px;
             display: flex;
