@@ -1,10 +1,14 @@
 <script setup>
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import Canvas from '../components/Canvas.vue';
 import Popup from '../components/Popup.vue';
 import InputText from '../components/InputText.vue';
 import user from '../stores/user';
 import axios from 'axios';
+import ErrorMessage from '../components/ErrorMessage.vue';
+
+const router = useRouter();
 
 const nonogram = reactive({
     name: '',
@@ -13,6 +17,8 @@ const nonogram = reactive({
     error: '',
     state: Array(0)
 })
+
+const saveError = ref('');
 
 const validateNonogram = () => {
     const { name, width, height } = nonogram;
@@ -37,8 +43,25 @@ const createNonogram = (height, width) => {
     }
 }
 
-const saveNonogram = async (nonogram) => {
-    axios.post('/api/nonogram/save', nonogram);
+const saveNonogram = async () => {
+    const {name, width, height, state} = nonogram;
+
+    try {
+        const { data } = await axios.post('/api/nonogram/create', {
+            name,
+            nonogram: state,
+            width: +width,
+            height: +height
+        });
+
+        router.push(`/nonogram/${data.id}`);
+        
+        } catch(error) {
+        saveError.value = 'looks like nonogram is invalid';
+        setTimeout(() => {
+            saveError.value = '';
+        }, 5000);
+    }
 }
 
 const popup = ref(true);
@@ -73,7 +96,7 @@ const resize = (event) => {
                 Mode: {{ mode }}
                 <button @click="toggleMode">toggle mode</button>
             </div>
-            <button>save</button>
+            <button @click="saveNonogram">save</button>
         </div>
     </main>
     <Popup :isOpen="popup">
@@ -87,6 +110,9 @@ const resize = (event) => {
             <button @click.prevent="() => createNonogram(nonogram.height, nonogram.width)" class="button-secondary">create</button>
         </form>
     </Popup>
+    <ErrorMessage v-if="saveError">
+        {{ saveError }}
+    </ErrorMessage>
 </template>
 
 <style lang="scss">
