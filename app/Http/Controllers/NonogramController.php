@@ -36,6 +36,6 @@ class NonogramController extends Controller
     }
     public function show($id)
     {
-        //
+        return Nonogram::find($id)->toJson();
     }
 }
