@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @mixin Builder
@@ -26,6 +25,8 @@ class Nonogram extends Model
         'task' => 'array',
         'result' => 'array',
     ];
+
+    protected $with = ['author'];
 
     public static function isValid($result): bool
     {
