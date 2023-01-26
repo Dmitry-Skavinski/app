@@ -71,6 +71,8 @@ const draw = (x, y, activeMode = 'default') => {
                     for (let key in state) {
                         state[key] = [... path.initialState[key]]
                     }
+                    
+                    path.isActive = false;
                 }
 
             } else {
@@ -122,7 +124,7 @@ const generateCellContent = (cellValue) => {
 </script>
 
 <template>
-    <div class="canvas" @mouseup="stopDrawing" @mouseleave="stopDrawing" @contextmenu.prevent="" :style="{'--scale': scale}">
+    <div class="canvas" @mouseup="stopDrawing" @mouseleave="stopDrawing" @contextmenu.prevent="">
         <div v-for="(row, rowKey) in state" class="row">
             <div
             v-for="(cell, columnKey) in row"
@@ -153,8 +155,8 @@ const generateCellContent = (cellValue) => {
 
         .cell {
             --accent-border: #{$primary};
-            width: calc(16px * var(--scale));
-            height: calc(16px * var(--scale));
+            width: calc($cell-size * var(--scale));
+            height: calc($cell-size * var(--scale));
             background-color: $background-secondary;
             border-right: 2px solid grey;
             border-bottom: 2px solid grey;

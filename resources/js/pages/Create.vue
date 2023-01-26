@@ -7,6 +7,7 @@ import InputText from '../components/InputText.vue';
 import user from '../stores/user';
 import axios from 'axios';
 import ErrorMessage from '../components/ErrorMessage.vue';
+import { nonograms } from '../stores/nonograms';
 
 const router = useRouter();
 
@@ -54,9 +55,11 @@ const saveNonogram = async () => {
             height: +height
         });
 
+        nonograms[data.id] = data;
+
         router.push(`/nonogram/${data.id}`);
-        
-        } catch(error) {
+    } catch(error) {
+        console.log(error);
         saveError.value = 'looks like nonogram is invalid';
         setTimeout(() => {
             saveError.value = '';
@@ -83,7 +86,7 @@ const resize = (event) => {
     <main v-if="!Object.keys(user).length" class="route-create">
         <h1>You need to login first</h1>
     </main>
-    <main v-if="Object.keys(user).length" class="route-create">
+    <main v-if="Object.keys(user).length" class="route-create"  :style="{'--scale': scale}">
         <div class="canvas_wrapper" v-if="!popup">
             <Canvas :height="+nonogram.height" :width="+nonogram.width" :scale="scale" :mode="mode" :state="nonogram.state"/>  
         </div>
