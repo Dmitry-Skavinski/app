@@ -1,8 +1,8 @@
 <script setup>
-import axios from 'axios';
-
-axios.get('/api/nonogram/list');
+import NonogramList from '../components/NonogramList.vue';
 </script>
 <template>
-    home
+    <main class="route-home">
+        <NonogramList/>
+    </main>
 </template>

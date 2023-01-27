@@ -7,7 +7,7 @@ import Register from './Register.vue';
 <template>
     <header>
         <nav>
-            <RouterLink to="/list">nonograms</RouterLink>
+            <RouterLink to="/">nonograms</RouterLink>
             <RouterLink to="/create">create nonogram</RouterLink>
         </nav>
         <div class="actions">
