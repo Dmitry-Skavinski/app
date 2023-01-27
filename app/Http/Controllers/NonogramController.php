@@ -10,7 +10,7 @@ class NonogramController extends Controller
 {
     public function list()
     {
-        $nonograms = Nonogram::paginate(20, ['*'], 'p');
+        $nonograms = Nonogram::orderBy('id', 'desc')->paginate(20, ['*'], 'p');
         return response()->json($nonograms);
     }
 
