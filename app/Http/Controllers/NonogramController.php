@@ -14,6 +14,15 @@ class NonogramController extends Controller
         return response()->json($nonograms);
     }
 
+    public function listByAuthor($author)
+    {
+        $nonograms = Nonogram::where('author_id', '=', $author)
+            ->orderBy('id', 'desc')
+            ->paginate(20, ['*'], 'p');
+
+        return response()->json($nonograms);
+    }
+
     public function create(Request $request)
     {
         $validated = $request->validate([

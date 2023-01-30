@@ -14,6 +14,7 @@ Route::post('register', [UserController::class, 'register']);
 
 Route::prefix('nonogram')->group(function() {
     Route::middleware('auth:sanctum')->post('create', [NonogramController::class, 'create']);
+    Route::get('/list/{author}', [NonogramController::class, 'listByAuthor']);
     Route::get('/list', [NonogramController::class, 'list']);
     Route::get('/{id}', [NonogramController::class, 'show']);
 });

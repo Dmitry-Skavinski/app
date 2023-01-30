@@ -2,9 +2,12 @@
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import nonograms from '../stores/nonograms';
+const { source } = defineProps(['source'])
+
 const route = useRoute();
+
 (async function() {
-        const { data } = await axios.get(`/api/nonogram/list?p=${route.query.p || 1}`);
+        const { data } = await axios.get(`${window.location.origin + '/' + source}?p=${route.query.p || 1}`);
         nonograms.data = data.data;
 })();
 </script>
@@ -17,7 +20,7 @@ const route = useRoute();
             </div>
             <div class="nonogram__item__description">
                 <h2 class="nonogram__item__name">{{ item.name }}</h2>
-                by <RouterLink to="/me">{{  item.author.name }}</RouterLink>
+                by <RouterLink :to="`/author/${item.author_id}`">{{  item.author.name }}</RouterLink>
             </div>
         </RouterLink>
     </div>
