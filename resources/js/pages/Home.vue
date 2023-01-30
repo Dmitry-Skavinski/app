@@ -3,6 +3,6 @@ import NonogramList from '../components/NonogramList.vue';
 </script>
 <template>
     <main class="route-home">
-        <NonogramList/>
+        <NonogramList source="api/nonogram/list"/>
     </main>
 </template>

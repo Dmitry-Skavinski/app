@@ -5,12 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Nonogram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NonogramController extends Controller
 {
     public function list()
     {
         $nonograms = Nonogram::orderBy('id', 'desc')->paginate(20, ['*'], 'p');
+        return response()->json($nonograms);
+    }
+
+    public function listByAuthor($author)
+    {
+        $nonograms = Nonogram::where('author_id', '=', $author)
+            ->orderBy('id', 'desc')
+            ->paginate(20, ['*'], 'p');
+
         return response()->json($nonograms);
     }
 
