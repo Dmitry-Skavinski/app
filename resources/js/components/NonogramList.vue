@@ -7,7 +7,7 @@ const { source } = defineProps(['source'])
 const route = useRoute();
 
 (async function() {
-        const { data } = await axios.get(`${window.location.origin + '/' + source}?p=${route.query.p || 1}`);
+        const { data } = await axios.get(`${source}?p=${route.query.p || 1}`);
         nonograms.data = data.data;
 })();
 </script>
