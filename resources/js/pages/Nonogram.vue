@@ -17,9 +17,17 @@ const state = reactive([]);
         const { data } = await axios.get(`/api/nonogram/${route.params.id}`);
         Object.assign(task, data);
     }
-    const initialState =  new Array(task.height).fill(0).map(el => new Array(task.width).fill(0));
-    Object.assign(state, initialState);
+    try {
+        const { data } = await axios.get(`/api/nonogram/progress/${route.params.id}`);
+        Object.assign(state, data.data);
+    } catch {
+        Object.assign(state, new Array(task.height).fill(0).map(el => new Array(task.width).fill(0)));
+    }
 })();
+
+const saveProgress = async () => {
+    axios.put(`/api/nonogram/progress/${route.params.id}`, {data: state});
+}
 
 const scale = ref(1);
 
@@ -43,7 +51,7 @@ const toggleMode = () => {
                 Scale:
                 <input type="range" min="0.5" max="10" @input="setScale" :value="scale" step="0.1"/>
             </div>
-            <button @click="">save</button>
+            <button @click="saveProgress">save</button>
         </div>
         <div class="nonogram__wrapper">
             <div class="task task__top">
