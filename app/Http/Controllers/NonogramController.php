@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nonogram;
+use App\Models\Progress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,8 +43,34 @@ class NonogramController extends Controller
         $nonogram->save();
         return response()->json($nonogram);
     }
+
     public function show($id)
     {
         return Nonogram::find($id)->toJson();
+    }
+
+    public function getProgress($id)
+    {
+        if ($progress = Auth::user()->startedNonograms()->where('nonogram_id', $id)->first()) {
+            return response()->json($progress);
+        }
+        return response('progress was not found', 400);
+    }
+
+    public function setProgress(Request $request, $id)
+    {
+        if ($progress = Auth::user()->startedNonograms()->where('nonogram_id', $id)->first()) {
+            $progress->data = $request->data;
+        } else {
+            $progress = Progress::create([
+                'data' => $request->data,
+                'nonogram_id' => $id,
+                'user_id' => Auth::id()
+                ]);
+            $progress->user()->associate(Auth::user());
+            $progress->nonogram()->associate(Nonogram::find($id));
+        }
+        $progress->save();
+        return response()->json($progress);
     }
 }

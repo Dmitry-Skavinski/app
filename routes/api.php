@@ -17,4 +17,6 @@ Route::prefix('nonogram')->group(function() {
     Route::get('/list/{author}', [NonogramController::class, 'listByAuthor']);
     Route::get('/list', [NonogramController::class, 'list']);
     Route::get('/{id}', [NonogramController::class, 'show']);
+    Route::middleware('auth:sanctum')->get('/progress/{id}', [NonogramController::class, 'getProgress']);
+    Route::middleware('auth:sanctum')->put('/progress/{id}', [NonogramController::class, 'setProgress']);
 });
