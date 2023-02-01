@@ -1,7 +1,14 @@
 <script setup>
+import axios from 'axios';
 import user from '../stores/user';
 import Login from './Login.vue';
 import Register from './Register.vue';
+
+const logout = async () => {
+    const response = await axios.get('api/logout');
+
+    location.reload();
+}
 </script>
 
 <template>
@@ -15,7 +22,7 @@ import Register from './Register.vue';
                 <Login/>
                 <Register/>
             </template>
-            <RouterLink v-else to="/me">profile</RouterLink>
+            <button v-else class="button-text" @click="logout">Log out</button>
         </div>
     </header>
 </template>

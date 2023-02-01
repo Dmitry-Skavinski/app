@@ -21,6 +21,7 @@ body {
         background-color: $background-primary;
         display: grid;
         grid-template-rows: max-content 1fr max-content;
+        position: relative;
 
         @include mobile() {
             width: 100%;
@@ -63,6 +64,19 @@ button, .button {
         transition: 0.1s border-radius linear;
         border-radius: 10px;
         cursor: pointer;
+    }
+}
+
+.button-text {
+    background: none;
+    font-weight: normal;
+    height: auto;
+    color: $secondary;
+    text-transform: uppercase;
+    font-size: 16px;
+
+    &:hover {
+        color: $hovered-text;
     }
 }
 
