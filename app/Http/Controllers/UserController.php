@@ -44,4 +44,10 @@ class UserController extends Controller
 
         return response('user not found', 404);
     }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        return response('ok');
+    }
 }

@@ -4,9 +4,9 @@ import { reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Canvas from '../components/Canvas.vue';
 import nonograms from '../stores/nonograms';
+import user from '../stores/user';
 
 const route = useRoute();
-
 const task = reactive({});
 const state = reactive([]);
  
@@ -51,7 +51,7 @@ const toggleMode = () => {
                 Scale:
                 <input type="range" min="0.5" max="10" @input="setScale" :value="scale" step="0.1"/>
             </div>
-            <button @click="saveProgress">save</button>
+            <button v-if="user.name" @click="saveProgress">save</button>
         </div>
         <div class="nonogram__wrapper">
             <div class="task task__top">

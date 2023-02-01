@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+Route::middleware('auth:sanctum')->get('logout', [UserController::class, 'logout']);
 
 Route::prefix('nonogram')->group(function() {
     Route::middleware('auth:sanctum')->post('create', [NonogramController::class, 'create']);
